@@ -1,0 +1,104 @@
+#modal-container {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .active {
+    font-weight: bold; /* Cambia el peso de la fuente para resaltar la opción activa */
+    color: rgb(255, 255, 255);
+  }
+
+
+  .circle {
+    width: 50px; /* ajusta el tamaño del círculo según tus necesidades */
+    height: 50px; /* ajusta el tamaño del círculo según tus necesidades */
+    border-radius: 50%; /* esto hace que el div tenga forma de círculo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px; /* ajusta el tamaño del texto dentro del círculo */
+  }
+  
+
+  /******************************************************************************/
+
+/* Estilos para el modal */
+#modal {
+  display: none; /* Ocultar el modal por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  z-index: 1000; /* Asegurar que el modal esté sobre otros elementos */
+  overflow: auto; /* Permitir desplazamiento si el contenido del modal es largo */
+}
+
+#modal-content {
+  background-color: #fefefe; /* Fondo del contenido del modal */
+  margin: 10% auto; /* Centrar verticalmente y dejar espacio en la parte superior */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Ancho del contenido del modal */
+  max-width: 600px; /* Ancho máximo del contenido del modal */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+.modal-header {
+  padding: 10px 0; /* Espaciado dentro del encabezado del modal */
+  border-bottom: 1px solid #ddd; /* Borde inferior del encabezado */
+}
+
+.modal-header h2 {
+  margin: 0; /* Eliminar el margen predeterminado del encabezado */
+}
+
+.modal-footer {
+  width: 40%;
+  margin: 0 auto;
+  display: flex;
+  margin-top: 20px;
+  text-align: right;
+  justify-content: space-evenly;
+}
+
+.modal-footer button {
+  margin-left: 10px; /* Espaciado entre botones */
+}
+
+.modal-image {
+  max-width: 100%; /* Ajustar la imagen al ancho máximo del contenedor */
+  max-height: 300px; /* Limitar la altura máxima de la imagen para evitar desbordes */
+}
+
+/*********************************Events Module ************************************************/
+
+.btn-AddEvent {
+  width: 70px;
+  display: flex;
+  height: 70px;
+  font-size: 24px;
+  line-height: 48px;
+  position: fixed;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*********************************************************************************/
