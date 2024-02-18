@@ -12,7 +12,7 @@ class EventsModule {
         this.PantallaInicio()
         this.get_allevents()
         this.eventosDiv = document.getElementById('Eventos');
-
+        this.modal = new Modal();
     }
 
 
@@ -50,11 +50,55 @@ class EventsModule {
         container.appendChild(eventosDiv);
     
         const addButton = document.createElement('button');
-        addButton.id = 'btn-AddEvent';
-        addButton.textContent = '+';
-        addButton.className = 'btn-AddEvent bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md absolute bottom-4 right-4';
-        container.appendChild(addButton);
-    
+addButton.id = 'btn-AddEvent';
+addButton.textContent = '+';
+addButton.className = 'btn-AddEvent bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md absolute bottom-4 right-4';
+container.appendChild(addButton);
+addButton.addEventListener('click', () => {
+    this.modal.open({
+        title: 'A                    gregar Evento',
+        text: 'Contenido del modal',
+        htmlContent: `
+            <form id="miFormulario" class="w-full max-w-lg mx-auto">
+                <div class="mb-4">
+                    <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">Título:</label>
+                    <input type="text" id="titulo" name="titulo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="lugar" class="block text-gray-700 text-sm font-bold mb-2">Lugar:</label>
+                    <input type="text" id="lugar" name="lugar" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaInicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Inicio:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaFinal" class="block text-gray-700 text-sm font-bold mb-2">Fecha Final:</label>
+                    <input type="date" id="fechaFinal" name="fechaFinal" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="centro" class="block text-gray-700 text-sm font-bold mb-2">Centro:</label>
+                    <select id="centro" name="centro" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="centro1">Pachuca</option>
+                        <option value="centro2">Centro 2</option>
+</select>
+                </div>
+                
+            </form>
+        `,
+        buttons: [
+            { label: 'Aceptar', action: () => { console.log('Aceptar clicado'); } },
+            { label: 'Cancelar', action: () => { this.modal.close() } }
+        ],
+        modalClass: 'mi-clase-modal',
+        contentClass: 'mi-clase-contenido'
+    });
+});
+
         this.container.appendChild(container);
     }
 
