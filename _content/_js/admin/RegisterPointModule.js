@@ -87,7 +87,7 @@ class Points {
         this.httpRequestService.makeRequest({
             url: this.URL,
             data: data_post,
-            method: 'POST',
+            method: 'POST', // Cambiar a método POST        
             successCallback: this.handlerGetAllPoints.bind(this),
             errorCallback: this.handleRequestError
         });
@@ -117,19 +117,16 @@ class Points {
                 const nombre = document.createElement('p');
                 nombre.textContent = `Nombre: ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
 
+                const totalPuntos = document.createElement('p');
+                totalPuntos.textContent = `Punto asignado: ${dato.total_puntos}`;
+
                 const descripcion = document.createElement('p');
                 descripcion.textContent = `Descripción: ${dato.descripcion}`;
 
-                const totalPuntos = document.createElement('p');
-                totalPuntos.textContent = `Total Puntos: ${dato.total_puntos}`;
-
-                // Añadir todas las etiquetas <p> al div de contenido
-                [username, nombre, descripcion, totalPuntos].forEach(elem => {
+                [username, nombre, totalPuntos,descripcion].forEach(elem => {
                     contentDiv.appendChild(elem);
                 });
                 card.appendChild(contentDiv);
-                // Verificar si el total de puntos es igual a 0
-                // Verificar si el total de puntos es igual a 0
                 if (dato.total_puntos == 0) {
                     // Crear el contenedor principal
                     const container = document.createElement('div');

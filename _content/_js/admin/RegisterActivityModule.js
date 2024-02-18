@@ -116,14 +116,11 @@ class RegistroAsitencia {
                 const nombre = document.createElement('p');
                 nombre.textContent = `Nombre: ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
 
-                const descripcion = document.createElement('p');
-                descripcion.textContent = `Descripción: ${dato.descripcion}`;
-
-                const totalPuntos = document.createElement('p');
-                totalPuntos.textContent = `Total Puntos: ${dato.total_puntos}`;
+                const fecha = document.createElement('p');
+                fecha.textContent = `Fecha: ${dato.fecha}`;
 
                 // Añadir todas las etiquetas <p> al div de contenido
-                [username, nombre, descripcion, totalPuntos].forEach(elem => {
+                [username, nombre, fecha].forEach(elem => {
                     contentDiv.appendChild(elem);
                 });
                 card.appendChild(contentDiv);
