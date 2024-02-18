@@ -2,22 +2,14 @@ class Activities {
 
     constructor() {
         this.httpRequestService = new HttpRequestService();
-        this.container;
-        this.eventid;
+        this.container = document.getElementById('app-container');
+        this.eventid = null;
         this.URL = './_content/_php/controllerAdmin.php';
-        console.log('Activities');
     }
 
-    init(container,eventid) {
-        this.container = container;
-        this.eventid = eventid;
-        console.log(container,eventid);
+    init(eventid) {
         this.container.innerHTML = '';  
-        this.get_allactivities();
-        console.log("Goa");
-    }
-
-    reload() {
+        this.eventid = eventid;
         this.PantallaInicio();
         this.get_allactivities();
     }
@@ -38,7 +30,7 @@ class Activities {
         backButton.addEventListener('click', () => {
             this.eventos = new EventsModule();
             this.container.innerHTML = '';
-            this.eventos.init(this.container);
+            this.eventos.init();
         });
         
         const title = document.createElement('h2');
@@ -90,6 +82,7 @@ class Activities {
             action: 'handlerGetAllActivities',
             eventid: this.eventid
         };
+        console.log( data_post);
         this.httpRequestService.makeRequest({
             url: this.URL,
             method: 'POST',
@@ -101,7 +94,6 @@ class Activities {
 
     handleGetAllActivities = data => {
         if (data.success) {
-            console.log(data);
             this.actividadesDiv = document.getElementById('Actividades');
             this.actividadesDiv.innerHTML = '';
     
@@ -174,7 +166,8 @@ class Activities {
                 botonesDiv.appendChild(boton1);
                 boton1.addEventListener('click', () => {
                     this.registroAsitencia = new RegistroAsitencia();
-                    this.registroAsitencia.init(this.container,actividad.id);
+                    this.registroAsitencia.init(actividad.id , this.eventid);
+                    
                 }   );
 
                 // Botón 2

@@ -1,18 +1,18 @@
 class RegistroAsitencia {
     constructor() {
         this.httpRequestService = new HttpRequestService();
-        this.container;
-        this.actividadid;
+        this.container = document.getElementById('app-container');
+        this.actividadid = null;
+        this.eventid = null;
         this.URL = './_content/_php/controllerAdmin.php';
         
     }
 
-    init(container,actividadid) {
-        this.container = container;
+    init(actividadid , eventid) {
         this.actividadid = actividadid;
+        this.eventid = eventid;
         this.container.innerHTML = '';  
         this.PantallaInicio();
-        console.log(container,actividadid);
     }
 
 
@@ -30,9 +30,9 @@ class RegistroAsitencia {
         backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md';
         backButton.style.width = '15%'; // Establecer el ancho al 20%
         backButton.addEventListener('click', () => {
-            this.activities = new Activities();
             this.container.innerHTML = '';
-            this.activities.init(this.container);
+            this.activities = new Activities();
+            this.activities.init(this.eventid);
         });
         
         const title = document.createElement('h2');

@@ -6,7 +6,7 @@ class EventsModule {
         this.container = document.getElementById('app-container');
         this.URL = './_content/_php/controllerAdmin.php';
         this.infoUserContainer = document.getElementById('info_user');
-        this.eventosDiv;
+        this.eventosDiv = null;
         this.activities = new Activities();
     }
 
@@ -81,7 +81,7 @@ class EventsModule {
                 divTarjeta.className = 'bg-white rounded-lg shadow-lg p-4 mb-4'; // Añadido espacio alrededor de las tarjetas
                 divTarjeta.setAttribute('data-id', evento.id);
                 //divTarjeta.addEventListener('click',); // Agregar event listener para clic
-                divTarjeta.addEventListener('click', () => {this.activities.init(this.container,evento.id)});
+                divTarjeta.addEventListener('click', () => {this.activities.init(evento.id)});
 
                 const titulo = document.createElement('h3');
                 titulo.className = 'text-xl font-bold mb-4';
