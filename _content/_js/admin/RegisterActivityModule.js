@@ -13,6 +13,8 @@ class RegistroAsitencia {
         this.eventid = eventid;
         this.container.innerHTML = '';  
         this.PantallaInicio();
+        this.get_allAsistence();
+        this.RegisterAsistenceDiv = document.getElementById('Registroasistencia');
     }
 
 
@@ -62,10 +64,10 @@ class RegistroAsitencia {
 
         container.appendChild(searchDiv);
         
-        const asistenciaDiv = document.createElement('div');
-        asistenciaDiv.id = 'Registro de asistencia';
-        asistenciaDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
-        container.appendChild(asistenciaDiv);
+        const RegisterActivityDiv = document.createElement('div');
+        RegisterActivityDiv.id = 'Registroasistencia';
+        RegisterActivityDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        container.appendChild(RegisterActivityDiv);
         
         const addButton = document.createElement('button');
         addButton.id = 'btn-AddRegisterAsistence';
@@ -75,5 +77,64 @@ class RegistroAsitencia {
         
         this.container.appendChild(container);
     }
+
+
+    get_allAsistence() {
+        let data_post = {
+            actividadid: this.actividadid,
+            action: 'handlerGetAllAsistence'
+        };
+        this.httpRequestService.makeRequest({
+            url: this.URL,
+            data: data_post,
+            method: 'POST',
+            successCallback: this.handlerGetAllAsistence.bind(this),
+            errorCallback: this.handleRequestError
+        });
+    }
+
+    handlerGetAllAsistence(data) {
+        if (data.success) {
+            const datos = data.data.datos;
+
+            // Limpiar el contenido actual del contenedor
+            this.RegisterAsistenceDiv.innerHTML = '';
+
+            datos.forEach(dato => {
+                const card = document.createElement('div');
+                card.classList.add('border', 'border-gray-300', 'rounded-md', 'flex'); // Agregar 'flex' para usar flexbox
+                card.style.backgroundColor = 'white'; // Establecer el fondo blanco
+
+                const contentDiv = document.createElement('div'); // Div para el contenido de las etiquetas <p>
+                contentDiv.style.flexGrow = 1; // El contenido ocupará el espacio restante
+                contentDiv.style.textAlign = 'left'; // Alinear el contenido a la izquierda
+                contentDiv.classList.add('pt-4', 'pl-4', 'pb-4')
+
+                const username = document.createElement('p');
+                username.textContent = `Username: ${dato.username}`;
+
+                const nombre = document.createElement('p');
+                nombre.textContent = `Nombre: ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
+
+                const descripcion = document.createElement('p');
+                descripcion.textContent = `Descripción: ${dato.descripcion}`;
+
+                const totalPuntos = document.createElement('p');
+                totalPuntos.textContent = `Total Puntos: ${dato.total_puntos}`;
+
+                // Añadir todas las etiquetas <p> al div de contenido
+                [username, nombre, descripcion, totalPuntos].forEach(elem => {
+                    contentDiv.appendChild(elem);
+                });
+                card.appendChild(contentDiv);
+
+                // Agregar el div de contenido y el botón a la tarjeta
+                this.RegisterAsistenceDiv.appendChild(card);
+            });
+        } else {
+            console.log('Error al obtener los puntos');
+        }
+    }
+
     
 }

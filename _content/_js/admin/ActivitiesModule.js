@@ -176,6 +176,10 @@ class Activities {
                 boton2.className = 'boton bg-white hover:bg-gray-200 focus:bg-gray-300 focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm bg-gray-100';
                 boton2.style.width = '50%'; // Cada botón ocupa el 50% del ancho
                 botonesDiv.appendChild(boton2);
+                boton2.addEventListener('click', () => {
+                    this.registroPuntos = new Points();
+                    this.registroPuntos.init(actividad.id , this.eventid);
+                });
     
                 actividadDiv.appendChild(botonesDiv);
     

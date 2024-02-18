@@ -4,15 +4,18 @@ class Modal {
         this.modal = this.createModal();
         this.modalContent = this.createModalContent();
         this.setupModal();
+        console.log('Modal');
     }
 
     createModal() {
+        console.log('createModal');
         const modal = document.createElement('div');
         modal.id = 'modal';
         return modal;
     }
 
     createModalContent() {
+        console.log('createModalContent');
         const modalContent = document.createElement('div');
         modalContent.id = 'modal-content';
         return modalContent;
@@ -23,7 +26,8 @@ class Modal {
         this.container.appendChild(this.modal);
     }
 
-    open({ title = '', text = '', imageUrl = '', buttons = [], modalClass = '', contentClass = '', htmlContent = '' } = {}) {
+    open(
+        { title = '', text = '', imageUrl = '', buttons = [], modalClass = '', contentClass = '', htmlContent = '' } = {}) {
         this.modalContent.innerHTML = '';
 
         if (title) {
@@ -31,6 +35,7 @@ class Modal {
             modalHeader.classList.add(contentClass); // Agregar clase personalizada
             this.modalContent.appendChild(modalHeader);
         }
+        console.log('open');
 
         if (text) {
             const modalBody = this.createModalBody(text);

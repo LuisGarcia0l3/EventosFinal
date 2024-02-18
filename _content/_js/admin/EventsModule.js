@@ -2,11 +2,9 @@ class EventsModule {
 
     constructor() {
         this.httpRequestService = new HttpRequestService();
-        this.modal = new Modal();
         this.container = document.getElementById('app-container');
         this.URL = './_content/_php/controllerAdmin.php';
         this.infoUserContainer = document.getElementById('info_user');
-        this.eventosDiv = null;
         this.activities = new Activities();
     }
 

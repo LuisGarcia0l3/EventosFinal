@@ -27,6 +27,12 @@ class ControllerAdmin
                 $this->handlerGetAllActivities($data_post);
                 break;
            
+                case 'handlerGetAllPoints':
+                    $this->handlerGetAllPoints($data_post);
+                    break;
+            case 'handlerGetAllAsistence':
+                $this->handlerGetAllAsistence($data_post);
+                break;
           
             default:
                 break;
@@ -51,6 +57,26 @@ class ControllerAdmin
         $eventid = isset($data_post['eventid']) ? $data_post['eventid'] : '';
 
         $this->model->handlerGetAllActivities($eventid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerGetAllPoints($data_post)
+    {
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+
+        $this->model->handlerGetAllPoints($actividadid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+    
+    private function handlerGetAllAsistence($data_post)
+    {
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+
+        $this->model->handlerGetAllAsistence($actividadid);
         $data = $this->createResponseData();
         
         echo json_encode($data);
