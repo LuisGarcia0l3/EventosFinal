@@ -13,14 +13,11 @@ class Activities {
         this.eventid = eventid;
         console.log(container,eventid);
         this.container.innerHTML = '';  
+        this.PantallaInicio();
         this.get_allactivities();
         console.log("Goa");
     }
-
-    reload() {
-        this.PantallaInicio();
-        this.get_allactivities();
-    }
+    
 
     PantallaInicio() {
         const container = document.createElement('div');
