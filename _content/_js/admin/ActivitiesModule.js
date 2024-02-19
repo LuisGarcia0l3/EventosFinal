@@ -12,6 +12,7 @@ class Activities {
         this.eventid = eventid;
         this.PantallaInicio();
         this.get_allactivities();
+        this.modal = new Modal();
     }
 
     PantallaInicio() {
@@ -70,25 +71,108 @@ class Activities {
         addButton.textContent = '+';
         addButton.className = 'btn-AddEvent bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md absolute bottom-4 right-4';
         container.appendChild(addButton);
-        
+        addButton.addEventListener('click', () => {
+            this.modal.open({
+                title: 'Agregar actividad',
+                text: 'Contenido del modal',
+                htmlContent: `
+            <form id="miFormulario" class="w-full max-w-lg mx-auto">
+                <div class="mb-4">
+                    <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">Título:</label>
+                    <input type="text" id="titulo" name="titulo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="lugar" class="block text-gray-700 text-sm font-bold mb-2">Lugar:</label>
+                    <input type="text" id="lugar" name="lugar" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaInicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Inicio:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaFinal" class="block text-gray-700 text-sm font-bold mb-2">Fecha Final:</label>
+                    <input type="date" id="fechaFinal" name="fechaFinal" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+            </form>
+        `,
+                buttons: [
+                    { label: 'Aceptar', action: () => { this.validateAndSendActivityData() } },
+                    { label: 'Cancelar', action: () => { this.modal.close() } }
+                ],
+                modalClass: 'mi-clase-modal',
+                contentClass: 'mi-clase-contenido'
+            });
+        });
         this.container.appendChild(container);
     }
     
+
+    validateAndSendActivityData() {
+        const titulo = document.getElementById('titulo').value.trim();
+        const lugar = document.getElementById('lugar').value.trim();
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFinal = document.getElementById('fechaFinal').value;
+
+        if (!titulo || !lugar || !fechaInicio || !fechaFinal) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        const fechaInicioDate = new Date(fechaInicio);
+        const fechaFinalDate = new Date(fechaFinal);
+        if (fechaInicioDate > fechaFinalDate) {
+            alert('La fecha de inicio no puede ser mayor que la fecha final.');
+            return;
+        }
+
+        const activityData = {
+            titulo: titulo,
+            lugar: lugar,
+            fechaInicio: fechaInicio,
+            fechaFinal: fechaFinal,
+        };
+        this.add_activities(activityData);
+    }
     
-    
+    add_activities(activityData) {
+        let data_post = {
+            action: 'handlerAddActivity',
+            eventid: this.eventid,
+            activityData: activityData
+        };
+        this.httpRequestService.makeRequest({
+            url: this.URL,
+            method: 'POST',
+            data: data_post,
+            successCallback: this.handlerAddActivity.bind(this),
+            errorCallback: this.handleRequestError.bind(this)
+        });
+    }
+
+    handlerAddActivity(data) {
+        if (data.success) {
+            this.modal.close();
+            this.get_allactivities();
+
+        }
+    }
+
 
     get_allactivities() {
         let data_post = {
             action: 'handlerGetAllActivities',
             eventid: this.eventid
         };
-        console.log( data_post);
         this.httpRequestService.makeRequest({
             url: this.URL,
             method: 'POST',
             data: data_post,
             successCallback: this.handleGetAllActivities.bind(this),
-            errorCallback: this.handleRequestError
+            errorCallback: this.handleRequestError.bind(this)
         });
     }
 

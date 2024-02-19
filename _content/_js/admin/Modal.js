@@ -4,18 +4,15 @@ class Modal {
         this.modal = this.createModal();
         this.modalContent = this.createModalContent();
         this.setupModal();
-        console.log('Modal');
     }
 
     createModal() {
-        console.log('createModal');
         const modal = document.createElement('div');
         modal.id = 'modal';
         return modal;
     }
 
     createModalContent() {
-        console.log('createModalContent');
         const modalContent = document.createElement('div');
         modalContent.id = 'modal-content';
         return modalContent;
@@ -29,6 +26,7 @@ class Modal {
     open(
         { title = '', text = '', imageUrl = '', buttons = [], modalClass = '', contentClass = '', htmlContent = '' } = {}) {
         this.modalContent.innerHTML = '';
+        console.log('open');
 
         if (title) {
             const modalHeader = this.createModalHeader(title);
@@ -91,22 +89,22 @@ class Modal {
 
     createModalHeader(title) {
         const modalHeader = document.createElement('div');
-        modalHeader.classList.add('modal-header');
+        modalHeader.classList.add('modal-header', 'text-center','text-lg','font-bold'); // Agrega la clase 'text-center' para centrar el texto
         const modalTitle = document.createElement('h2');
         modalTitle.textContent = title;
         modalHeader.appendChild(modalTitle);
         return modalHeader;
     }
-
+    
     createModalBody(text) {
         const modalBody = document.createElement('div');
-        modalBody.classList.add('modal-body');
+        modalBody.classList.add('modal-body', 'text-justify' , 'my-2','text-sm'); // Agrega la clase 'text-justify' para justificar el texto
         const paragraph = document.createElement('p');
         paragraph.textContent = text;
         modalBody.appendChild(paragraph);
         return modalBody;
     }
-
+    
     createModalImage(imageUrl) {
         const modalImage = document.createElement('img');
         modalImage.src = imageUrl;
@@ -114,17 +112,17 @@ class Modal {
         return modalImage;
     }
 
-    createModalFooter(buttons) {
-        const modalFooter = document.createElement('div');
-        modalFooter.classList.add('modal-footer');
-        buttons.forEach(buttonData => {
-            const button = document.createElement('button');
-            button.textContent = buttonData.label;
-            button.addEventListener('click', buttonData.action);
-            modalFooter.appendChild(button);
-        });
-        return modalFooter;
-    }
+        createModalFooter(buttons) {
+            const modalFooter = document.createElement('div');
+            modalFooter.classList.add('modal-footer');
+            buttons.forEach(buttonData => {
+                const button = document.createElement('button');
+                button.textContent = buttonData.label;
+                button.addEventListener('click', buttonData.action);
+                modalFooter.appendChild(button);
+            });
+            return modalFooter;
+        }
 
     close() {
         this.modal.style.display = 'none';

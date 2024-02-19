@@ -2,31 +2,34 @@ class RegistroAsitencia {
     constructor() {
         this.httpRequestService = new HttpRequestService();
         this.container = document.getElementById('app-container');
+        this.URL = './_content/_php/controllerAdmin.php'
         this.actividadid = null;
         this.eventid = null;
-        this.URL = './_content/_php/controllerAdmin.php';
-        
     }
 
-    init(actividadid , eventid) {
+    init(actividadid, eventid) {
         this.actividadid = actividadid;
         this.eventid = eventid;
-        this.container.innerHTML = '';  
+        this.container.innerHTML = '';
         this.PantallaInicio();
         this.get_allAsistence();
         this.RegisterAsistenceDiv = document.getElementById('Registroasistencia');
+        this.modal = new Modal();
     }
 
 
+
+
     PantallaInicio() {
+
         const container = document.createElement('div');
         container.className = 'p-4 relative'; // Agregar relative al contenedor principal
-        
+
         const headerContainer = document.createElement('div'); // Contenedor para el botón de retroceso y el título
         headerContainer.className = 'flex justify-between items-center'; // Utilizamos flexbox para alinear los elementos horizontalmente
         headerContainer.style.textAlign = 'center'; // Centrar el contenido
         headerContainer.style.display = 'flex'; // Establecer el display a flex
-        
+
         const backButton = document.createElement('button');
         backButton.textContent = '←'; // Cambiar a flecha hacia la izquierda
         backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md';
@@ -36,20 +39,20 @@ class RegistroAsitencia {
             this.activities = new Activities();
             this.activities.init(this.eventid);
         });
-        
+
         const title = document.createElement('h2');
         title.textContent = 'Registro de Asistencias';
-        title.className = 'text-2xl font-bold'; 
+        title.className = 'text-2xl font-bold';
         title.style.flex = '1'; // Establecer el factor de flexibilidad para que ocupe el resto del espacio
-        
+
         headerContainer.appendChild(backButton);
         headerContainer.appendChild(title);
-        
+
         container.appendChild(headerContainer); // Agregamos el contenedor del encabezado al contenedor principal
-        
+
         const searchDiv = document.createElement('div');
         searchDiv.className = 'flex items-center my-6';
-        
+
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
@@ -63,19 +66,59 @@ class RegistroAsitencia {
         searchDiv.appendChild(searchButton); // Agrega el botón de búsqueda al contenedor de búsqueda
 
         container.appendChild(searchDiv);
-        
+
         const RegisterActivityDiv = document.createElement('div');
         RegisterActivityDiv.id = 'Registroasistencia';
         RegisterActivityDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
         container.appendChild(RegisterActivityDiv);
-        
+
         const addButton = document.createElement('button');
         addButton.id = 'btn-AddRegisterAsistence';
         addButton.textContent = '+';
         addButton.className = 'btn-AddEvent bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md absolute bottom-4 right-4';
         container.appendChild(addButton);
-        
+        addButton.addEventListener('click', () => {
+            this.modal.open({
+                title: 'Agregar Asistencia',
+                htmlContent: `
+                        <form id="miFormulario" class="w-full max-w-lg mx-auto">
+                            <div class="my-4">
+                                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-4" id="info-user">
+                            </div>        
+                        </form>
+                    `,
+                buttons: [
+                    { label: 'Buscar', action: () => { this.seachUser() } },
+                    { label: 'Cancelar', action: () => { this.modal.close() } }
+                ],
+                modalClass: 'mi-clase-modal',
+                contentClass: 'mi-clase-contenido'
+            });
+        });
         this.container.appendChild(container);
+    }
+
+
+
+    get_allUsers() {
+        let data_post = {
+            action: 'handlerGetAllUsers'
+        };
+        this.httpRequestService.makeRequest({
+            url: this.URL,
+            data: data_post,
+            method: 'POST',
+            successCallback: this.handlerGetAllUsers.bind(this),
+            errorCallback: this.handleRequestError.bind(this)
+        });
+    }
+
+    handlerGetAllUsers(data) {
+        if (data.success) {
+        }
     }
 
 
@@ -89,7 +132,7 @@ class RegistroAsitencia {
             data: data_post,
             method: 'POST',
             successCallback: this.handlerGetAllAsistence.bind(this),
-            errorCallback: this.handleRequestError
+            errorCallback: this.handleRequestError.bind(this)
         });
     }
 
@@ -133,5 +176,8 @@ class RegistroAsitencia {
         }
     }
 
-    
+    handleRequestError(error) {
+        console.error('Error en la petición:', error);
+    }
+
 }

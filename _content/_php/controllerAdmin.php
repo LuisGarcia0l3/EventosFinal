@@ -33,7 +33,14 @@ class ControllerAdmin
             case 'handlerGetAllAsistence':
                 $this->handlerGetAllAsistence($data_post);
                 break;
+
+            case 'handlerAddEvents':
+                $this->handlerAddEvents($data_post);
+                break;
           
+            case 'handlerAddActivity':
+                $this->handlerAddActivity($data_post);
+                break;  
             default:
                 break;
                 
@@ -77,6 +84,25 @@ class ControllerAdmin
         $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
 
         $this->model->handlerGetAllAsistence($actividadid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerAddEvents($data_post)
+    {
+        $eventData = isset($data_post['eventData']) ? $data_post['eventData'] : '';
+        $this->model->handlerAddEvents($eventData);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerAddActivity($data_post)
+    {
+        $activityData = isset($data_post['activityData']) ? $data_post['activityData'] : '';
+        $eventid = isset($data_post['eventid']) ? $data_post['eventid'] : '';
+        $this->model->handlerAddActivity($activityData, $eventid);
         $data = $this->createResponseData();
         
         echo json_encode($data);

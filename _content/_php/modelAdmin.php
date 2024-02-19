@@ -9,6 +9,33 @@ class ModelAdmin extends DBAbstractModel
     public $mensaje;
     public $datos;
 
+
+    public function handlerAddEvents($eventData)
+    {
+        try {
+            $this->query = "INSERT INTO Evento (Nombres, FechaI, FechaF, ubicacion, centro_id) VALUES ('$eventData[titulo]', '$eventData[fechaInicio]', '$eventData[fechaFinal]', '$eventData[lugar]', '$eventData[centro]');";
+            $this->executeSingleQuery();
+            $this->success = true;
+            $this->mensaje = 'Se ha agregado el evento correctamente.' . $this->query;
+        } catch (Exception $e) {
+            $this->success = false;
+            $this->mensaje = 'Error en la consulta: ' . $e->getMessage() . $this->query;
+        }
+    }
+
+    public function handlerAddActivity($activityData, $eventid)
+    {
+        try {
+            $this->query = "INSERT INTO Actividad (Nombre, FechaI, FechaF, evento_id) VALUES ('$activityData[titulo]', '$activityData[fechaInicio]', '$activityData[fechaFinal]','$eventid');";
+            $this->executeSingleQuery();
+            $this->success = true;
+            $this->mensaje = 'Se ha agregado la actividad correctamente.' . $this->query;
+        } catch (Exception $e) {
+            $this->success = false;
+            $this->mensaje = 'Error en la consulta: ' . $e->getMessage() . $this->query;
+        }
+    }
+
     public function handlerGetAllEvents()
     {
         try {
