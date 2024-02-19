@@ -56,11 +56,10 @@
 
 
     <script src="./_content/_js/admin/HttpRequestService.js"></script>
-    <script src="./_content/_js/admin/RegisterModule.js"></script>
-    <script src="./_content/_js/admin/TeamsModule.js"></script>
-    <script src="./_content/_js/admin/RegisterActivityModule.js"></script>
-    <script src="./_content/_js/admin/EventsModule.js"></script>
     <script src="./_content/_js/admin/Modal.js"></script>
+    <script src="./_content/_js/admin/RegisterActivityModule.js"></script>
+    <script src="./_content/_js/admin/RegisterPointModule.js"></script>
+    <script src="./_content/_js/admin/EventsModule.js"></script>
     <script src="./_content/_js/admin/ActivitiesModule.js"></script>
 
 

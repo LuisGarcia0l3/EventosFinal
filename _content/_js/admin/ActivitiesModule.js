@@ -2,20 +2,17 @@ class Activities {
 
     constructor() {
         this.httpRequestService = new HttpRequestService();
-        this.container;
-        this.eventid;
+        this.container = document.getElementById('app-container');
+        this.eventid = null;
         this.URL = './_content/_php/controllerAdmin.php';
-        console.log('Activities');
     }
 
-    init(container,eventid) {
-        this.container = container;
-        this.eventid = eventid;
-        console.log(container,eventid);
+    init(eventid) {
         this.container.innerHTML = '';  
+        this.eventid = eventid;
         this.PantallaInicio();
         this.get_allactivities();
-        console.log("Goa");
+        this.modal = new Modal();
     }
     
 
@@ -35,7 +32,7 @@ class Activities {
         backButton.addEventListener('click', () => {
             this.eventos = new EventsModule();
             this.container.innerHTML = '';
-            this.eventos.init(this.container);
+            this.eventos.init();
         });
         
         const title = document.createElement('h2');
@@ -67,7 +64,9 @@ class Activities {
         
         const actividadesDiv = document.createElement('div');
         actividadesDiv.id = 'Actividades';
-        actividadesDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        actividadesDiv.className = ' overflow-y-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2';
+        actividadesDiv.style.height = 'calc(100vh - 250px)'; // Ajusta la altura del contenedor fijo, dejando espacio para otros elementos
+
         container.appendChild(actividadesDiv);
         
         const addButton = document.createElement('button');
@@ -75,12 +74,96 @@ class Activities {
         addButton.textContent = '+';
         addButton.className = 'btn-AddEvent bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md absolute bottom-4 right-4';
         container.appendChild(addButton);
-        
+        addButton.addEventListener('click', () => {
+            this.modal.open({
+                title: 'Agregar actividad',
+                text: 'Contenido del modal',
+                htmlContent: `
+            <form id="miFormulario" class="w-full max-w-lg mx-auto">
+                <div class="mb-4">
+                    <label for="titulo" class="block text-gray-700 text-sm font-bold mb-2">Título:</label>
+                    <input type="text" id="titulo" name="titulo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="lugar" class="block text-gray-700 text-sm font-bold mb-2">Lugar:</label>
+                    <input type="text" id="lugar" name="lugar" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaInicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Inicio:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="fechaFinal" class="block text-gray-700 text-sm font-bold mb-2">Fecha Final:</label>
+                    <input type="date" id="fechaFinal" name="fechaFinal" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+            </form>
+        `,
+                buttons: [
+                    { label: 'Aceptar', action: () => { this.validateAndSendActivityData() } },
+                    { label: 'Cancelar', action: () => { this.modal.close() } }
+                ],
+                modalClass: 'mi-clase-modal',
+                contentClass: 'mi-clase-contenido'
+            });
+        });
         this.container.appendChild(container);
     }
     
+
+    validateAndSendActivityData() {
+        const titulo = document.getElementById('titulo').value.trim();
+        const lugar = document.getElementById('lugar').value.trim();
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFinal = document.getElementById('fechaFinal').value;
+
+        if (!titulo || !lugar || !fechaInicio || !fechaFinal) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        const fechaInicioDate = new Date(fechaInicio);
+        const fechaFinalDate = new Date(fechaFinal);
+        if (fechaInicioDate > fechaFinalDate) {
+            alert('La fecha de inicio no puede ser mayor que la fecha final.');
+            return;
+        }
+
+        const activityData = {
+            titulo: titulo,
+            lugar: lugar,
+            fechaInicio: fechaInicio,
+            fechaFinal: fechaFinal,
+        };
+        this.add_activities(activityData);
+    }
     
-    
+    add_activities(activityData) {
+        let data_post = {
+            action: 'handlerAddActivity',
+            eventid: this.eventid,
+            activityData: activityData
+        };
+        this.httpRequestService.makeRequest({
+            url: this.URL,
+            method: 'POST',
+            data: data_post,
+            successCallback: this.handlerAddActivity.bind(this),
+            errorCallback: this.handleRequestError.bind(this)
+        });
+    }
+
+    handlerAddActivity(data) {
+        if (data.success) {
+            this.modal.close();
+            this.get_allactivities();
+
+        }
+    }
+
 
     get_allactivities() {
         let data_post = {
@@ -92,13 +175,12 @@ class Activities {
             method: 'POST',
             data: data_post,
             successCallback: this.handleGetAllActivities.bind(this),
-            errorCallback: this.handleRequestError
+            errorCallback: this.handleRequestError.bind(this)
         });
     }
 
     handleGetAllActivities = data => {
         if (data.success) {
-            console.log(data);
             this.actividadesDiv = document.getElementById('Actividades');
             this.actividadesDiv.innerHTML = '';
     
@@ -171,7 +253,8 @@ class Activities {
                 botonesDiv.appendChild(boton1);
                 boton1.addEventListener('click', () => {
                     this.registroAsitencia = new RegistroAsitencia();
-                    this.registroAsitencia.init(this.container,actividad.id);
+                    this.registroAsitencia.init(actividad.id , this.eventid);
+                    
                 }   );
 
                 // Botón 2
@@ -180,6 +263,10 @@ class Activities {
                 boton2.className = 'boton bg-white hover:bg-gray-200 focus:bg-gray-300 focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm bg-gray-100';
                 boton2.style.width = '50%'; // Cada botón ocupa el 50% del ancho
                 botonesDiv.appendChild(boton2);
+                boton2.addEventListener('click', () => {
+                    this.registroPuntos = new Points();
+                    this.registroPuntos.init(actividad.id , this.eventid);
+                });
     
                 actividadDiv.appendChild(botonesDiv);
     

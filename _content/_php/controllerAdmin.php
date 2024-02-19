@@ -26,9 +26,27 @@ class ControllerAdmin
             case 'handlerGetAllActivities':
                 $this->handlerGetAllActivities($data_post);
                 break;
-           
+            case 'handlerGetAllPoints':
+                $this->handlerGetAllPoints($data_post);
+                break;
+            case 'handlerGetAllAsistence':
+                $this->handlerGetAllAsistence($data_post);
+                break;
+
+            case 'handlerAddEvents':
+                $this->handlerAddEvents($data_post);
+                break;
           
+            case 'handlerAddActivity':
+                $this->handlerAddActivity($data_post);
+                break;  
+            case 'handlerGetAllUsers':
+                $this->handlerGetAllUsers($data_post);
+                break;
             default:
+                break;
+            case 'handlerAddAsistence':
+                $this->handlerAddAsistence($data_post);
                 break;
                 
         }
@@ -51,6 +69,63 @@ class ControllerAdmin
         $eventid = isset($data_post['eventid']) ? $data_post['eventid'] : '';
 
         $this->model->handlerGetAllActivities($eventid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerGetAllPoints($data_post)
+    {
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+
+        $this->model->handlerGetAllPoints($actividadid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+    
+    private function handlerGetAllAsistence($data_post)
+    {
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+
+        $this->model->handlerGetAllAsistence($actividadid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerAddEvents($data_post)
+    {
+        $eventData = isset($data_post['eventData']) ? $data_post['eventData'] : '';
+        $this->model->handlerAddEvents($eventData);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerAddActivity($data_post)
+    {
+        $activityData = isset($data_post['activityData']) ? $data_post['activityData'] : '';
+        $eventid = isset($data_post['eventid']) ? $data_post['eventid'] : '';
+        $this->model->handlerAddActivity($activityData, $eventid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerGetAllUsers($data_post)
+    {
+        $this->model->handlerGetAllUsers();
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    }
+
+    private function handlerAddAsistence($data_post)
+    {
+        $username = isset($data_post['username']) ? $data_post['username'] : '';
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+        $this->model->handlerAddAsistence($username, $actividadid);
         $data = $this->createResponseData();
         
         echo json_encode($data);
