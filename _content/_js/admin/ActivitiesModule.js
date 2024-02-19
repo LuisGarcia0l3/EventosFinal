@@ -14,6 +14,7 @@ class Activities {
         this.get_allactivities();
         this.modal = new Modal();
     }
+    
 
     PantallaInicio() {
         const container = document.createElement('div');
