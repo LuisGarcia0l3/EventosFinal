@@ -13,7 +13,9 @@ class ModelAdmin extends DBAbstractModel
     public function handlerGetAllUsers()
     {
         try {
-            $this->query = "SELECT * FROM Usuario "; // Tu consulta aquí
+            $this->query = "SELECT Usuario.*, Centro.Nombre AS NombreCentro
+            FROM Usuario
+            JOIN Centro ON Usuario.centro_id = Centro.index "; // Tu consulta aquí
             $this->getResultsFromQuery();
             $this->datos = $this->rows;
             if (count($this->rows) >= 1) {
@@ -150,19 +152,19 @@ class ModelAdmin extends DBAbstractModel
             U.username,
             U.nombre,
             U.apaterno,
-            U.amaterno
+            U.amaterno,
+            C.Nombre AS nombre_centro,
+            DATE_FORMAT(A.Fecha, '%H:%i:%s') AS hora_registro
         FROM 
             Usuario U
-        LEFT JOIN 
-            UsuarioPunto UP ON U.username = UP.username
+        JOIN 
+            Centro C ON U.centro_id = C.index
         JOIN 
             Asistencia A ON U.username = A.username_id
         WHERE 
             A.actividad_id = '$actividadid' 
-        GROUP BY 
-            U.username, U.nombre, U.apaterno, U.amaterno       ";
-
-
+        ORDER BY 
+            A.Fecha                   ; ";
             $this->getResultsFromQuery();
             $this->datos = $this->rows;
             if (count($this->rows) >= 1) {
@@ -182,7 +184,7 @@ class ModelAdmin extends DBAbstractModel
     public function handlerAddAsistence($username, $actividadid)
     {
         try {
-            $this->query = "INSERT INTO Asistencia (username_id, actividad_id) VALUES ('$username', '$actividadid');";
+            $this->query = "INSERT INTO Asistencia (username_id, actividad_id, Fechasinhora) VALUES ('$username', '$actividadid', NOW());";
             $this->executeSingleQuery();
             $this->success = true;
             $this->mensaje = 'Se ha agregado la asistencia correctamente.' . $this->query;

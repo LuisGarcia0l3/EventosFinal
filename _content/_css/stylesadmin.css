@@ -34,13 +34,13 @@
 
 #modal-content {
   background-color: #fefefe; /* Fondo del contenido del modal */
-  margin: 10% auto; /* Centrar verticalmente y dejar espacio en la parte superior */
+  margin: 25% auto; /* Centrar verticalmente y dejar espacio en la parte superior */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Ancho del contenido del modal */
+  width: 90%; /* Ancho del contenido del modal */
   max-width: 600px; /* Ancho máximo del contenido del modal */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
 }
 
 .modal-header {

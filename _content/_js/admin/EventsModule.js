@@ -45,7 +45,7 @@ class EventsModule {
 
         const eventosDiv = document.createElement('div');
         eventosDiv.id = 'Eventos';
-        eventosDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        eventosDiv.className = ' grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ';
         container.appendChild(eventosDiv);
 
         const addButton = document.createElement('button');
@@ -171,7 +171,7 @@ class EventsModule {
             const eventos = data.data.datos;
             eventos.forEach(evento => {
                 const divTarjeta = document.createElement('div');
-                divTarjeta.className = 'bg-white rounded-lg shadow-lg p-4 mb-4'; // Añadido espacio alrededor de las tarjetas
+                divTarjeta.className = 'bg-white rounded-lg shadow-md p-4 mb-4'; // Añadido espacio alrededor de las tarjetas
                 divTarjeta.setAttribute('data-id', evento.id);
                 //divTarjeta.addEventListener('click',); // Agregar event listener para clic
                 divTarjeta.addEventListener('click', () => { this.activities.init(evento.id) });

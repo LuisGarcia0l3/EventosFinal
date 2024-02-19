@@ -63,7 +63,9 @@ class Activities {
         
         const actividadesDiv = document.createElement('div');
         actividadesDiv.id = 'Actividades';
-        actividadesDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        actividadesDiv.className = ' overflow-y-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2';
+        actividadesDiv.style.height = 'calc(100vh - 250px)'; // Ajusta la altura del contenedor fijo, dejando espacio para otros elementos
+
         container.appendChild(actividadesDiv);
         
         const addButton = document.createElement('button');

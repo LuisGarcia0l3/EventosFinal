@@ -25,13 +25,13 @@ class RegistroAsitencia {
     PantallaInicio() {
 
         const container = document.createElement('div');
-        container.className = 'p-4 relative'; // Agregar relative al contenedor principal
-
+        container.className = 'p-4 relative h-full flex flex-col'; // Agregar las clases flex y h-full para que el contenedor principal ocupe toda la altura disponible
+    
         const headerContainer = document.createElement('div'); // Contenedor para el botón de retroceso y el título
         headerContainer.className = 'flex justify-between items-center'; // Utilizamos flexbox para alinear los elementos horizontalmente
         headerContainer.style.textAlign = 'center'; // Centrar el contenido
         headerContainer.style.display = 'flex'; // Establecer el display a flex
-
+    
         const backButton = document.createElement('button');
         backButton.textContent = '←'; // Cambiar a flecha hacia la izquierda
         backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md';
@@ -41,39 +41,39 @@ class RegistroAsitencia {
             this.activities = new Activities();
             this.activities.init(this.eventid);
         });
-
+    
         const title = document.createElement('h2');
         title.textContent = 'Registro de Asistencias';
         title.className = 'text-2xl font-bold';
         title.style.flex = '1'; // Establecer el factor de flexibilidad para que ocupe el resto del espacio
-
+    
         headerContainer.appendChild(backButton);
         headerContainer.appendChild(title);
-
+    
         container.appendChild(headerContainer); // Agregamos el contenedor del encabezado al contenedor principal
-
+    
         const searchDiv = document.createElement('div');
         searchDiv.className = 'flex items-center my-6';
-
+    
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
         searchInput.className = 'flex-1 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
-
+    
         const searchButton = document.createElement('button');
         searchButton.className = 'bg-gray-300 rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
-
-
+    
         searchDiv.appendChild(searchInput);
         searchDiv.appendChild(searchButton); // Agrega el botón de búsqueda al contenedor de búsqueda
-
+    
         container.appendChild(searchDiv);
-
+    
         const RegisterActivityDiv = document.createElement('div');
         RegisterActivityDiv.id = 'Registroasistencia';
-        RegisterActivityDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        RegisterActivityDiv.className = ' overflow-y-auto grid grid-cols-1 gap-2'; // Agrega la clase overflow-y-auto para habilitar el desplazamiento vertical
+        RegisterActivityDiv.style.height = 'calc(100vh - 250px)'; // Ajusta la altura del contenedor fijo, dejando espacio para otros elementos
         container.appendChild(RegisterActivityDiv);
-
+    
         const addButton = document.createElement('button');
         addButton.id = 'btn-AddRegisterAsistence';
         addButton.textContent = '+';
@@ -88,18 +88,17 @@ class RegistroAsitencia {
                             <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
                             <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
-                        <div class="mb-4" id="info-user">
+                        <div class="mb-4 overflow-y-auto h-80" id="info-user">
                         </div>        
                     </form>
                 `,
                 buttons: [
-                    { label: 'Buscar', action: () => { this.seachUser() } },
-                    { label: 'Cancelar', action: () => { this.modal.close() } }
+                    { label: 'Cerrar', action: () => { this.modal.close() } }
                 ],
                 modalClass: 'mi-clase-modal',
                 contentClass: 'mi-clase-contenido'
             });
-            this.seachUser() 
+            this.seachUser()
             // Obtener el input de búsqueda después de abrir el modal
             const inputBusqueda = document.getElementById('nombre');
             // Agregar evento de escucha para actualizar la búsqueda en tiempo real
@@ -107,42 +106,60 @@ class RegistroAsitencia {
                 this.seachUser();
             });
         });
-        
+    
         this.container.appendChild(container);
     }
+    
+    
 
-    seachUser() {   
+    seachUser() {
         let nombre = document.getElementById('nombre').value;
         const infoUser = document.getElementById('info-user');
-    
+
         // Limpiar el contenedor de información de usuario
         infoUser.innerHTML = '';
-    
+
         // Buscar usuarios que coincidan con el nombre ingresado
-        const resultados = this.usuarios.filter(usuario => 
+        const resultados = this.usuarios.filter(usuario =>
             usuario.username.toLowerCase().includes(nombre.toLowerCase()) ||
             usuario.nombre.toLowerCase().includes(nombre.toLowerCase()) ||
             usuario.apaterno.toLowerCase().includes(nombre.toLowerCase()) ||
             usuario.amaterno.toLowerCase().includes(nombre.toLowerCase())
         );
-    
+
         // Mostrar los resultados en el contenedor de información de usuario
         resultados.forEach(resultado => {
             // Crear la tarjeta para cada resultado
             const card = document.createElement('div');
-            card.classList.add('result-card'); // Agregar una clase para estilizar la tarjeta
-    
+            card.classList.add('result-card', 'flex', 'justify-between', 'rounded-md', 'shadow-md', 'p-2', 'items-center'); // Utilizar clases de Tailwind CSS para estilos
+
             // Crear elementos para mostrar los datos del usuario
+            const userData = document.createElement('div'); // Contenedor para datos de usuario
+            userData.classList.add('flex', 'flex-col'); // Clases flex y flex-col para alinear elementos verticalmente
+
             const usernameElement = document.createElement('p');
-            usernameElement.textContent = `Username: ${resultado.username}`;
-    
+            usernameElement.textContent = `SAP: ${resultado.username}`;
+            usernameElement.classList.add('text-m', 'font-bold'); // Clases de Tailwind para estilos de texto
+
             const nombreElement = document.createElement('p');
             nombreElement.textContent = `Nombre: ${resultado.nombre} ${resultado.apaterno} ${resultado.amaterno}`;
-    
+            nombreElement.classList.add('text-sm'); // Clase de Tailwind para estilos de texto más pequeños
+
+            const centroElement = document.createElement('p');
+            centroElement.textContent = `Centro: ${resultado.NombreCentro}`;
+            centroElement.classList.add('text-sm', 'text-gray-500'); // Clases de Tailwind para estilos de texto más pequeños y color gris
+
+            // Agregar elementos de usuario al contenedor userData
+            userData.appendChild(nombreElement);
+            userData.appendChild(usernameElement);
+            userData.appendChild(centroElement);
+
             // Crear el botón de agregar
             const addButton = document.createElement('button');
-            addButton.textContent = 'Agregar';
-            addButton.classList.add('add-button'); // Agregar una clase para estilizar el botón
+            addButton.textContent = 'Registrar';
+            addButton.classList.add('add-button', 'text-sm', 'p-2', 'bg-blue-500', 'text-white', 'rounded-md', 'shadow-sm'); // Clases de Tailwind para estilos de botón
+
+            // Agregar evento de clic al botón de agregar
             addButton.addEventListener('click', () => {
                 let data_post = {
                     actividadid: this.actividadid,
@@ -157,26 +174,26 @@ class RegistroAsitencia {
                     errorCallback: this.handleRequestError.bind(this)
                 });
             });
-    
+
             // Agregar elementos a la tarjeta
-            card.appendChild(usernameElement);
-            card.appendChild(nombreElement);
-            card.appendChild(addButton);
-    
+            card.appendChild(userData); // Agregar contenedor de datos de usuario
+            card.appendChild(addButton); // Agregar botón de agregar
+
             // Agregar la tarjeta al contenedor de información de usuario
             infoUser.appendChild(card);
+
         });
     }
 
     handlerAddAsistence(data) {
         if (data.success) {
-            this.modal.close();
+            this.RegisterAsistenceDiv.innerHTML = '';
             this.get_allAsistence();
         } else {
             console.log('Error al agregar la asistencia');
         }
     }
-    
+
     get_allUsers() {
         let data_post = {
             action: 'handlerGetAllUsers'
@@ -192,18 +209,18 @@ class RegistroAsitencia {
 
     handlerGetAllUsers(data) {
         if (data.success) {
-            // Indexar los datos relevantes de los usuarios
             this.usuarios = data.data.datos.map(usuario => ({
                 username: usuario.username,
                 nombre: usuario.nombre,
                 apaterno: usuario.apaterno,
-                amaterno: usuario.amaterno
+                amaterno: usuario.amaterno,
+                NombreCentro: usuario.NombreCentro
             }));
-            console.log(this.usuarios);
         }
     }
 
 
+    
 
     get_allAsistence() {
         let data_post = {
@@ -221,36 +238,30 @@ class RegistroAsitencia {
 
     handlerGetAllAsistence(data) {
         if (data.success) {
+            
             const datos = data.data.datos;
-
-            // Limpiar el contenido actual del contenedor
             this.RegisterAsistenceDiv.innerHTML = '';
-
             datos.forEach(dato => {
                 const card = document.createElement('div');
-                card.classList.add('border', 'border-gray-300', 'rounded-md', 'flex'); // Agregar 'flex' para usar flexbox
+                card.classList.add('shadow-md', 'p-4','rounded-md', 'flex', 'flex-col'); // Agregar 'flex' para usar flexbox y 'flex-col' para disposición vertical
                 card.style.backgroundColor = 'white'; // Establecer el fondo blanco
-
-                const contentDiv = document.createElement('div'); // Div para el contenido de las etiquetas <p>
-                contentDiv.style.flexGrow = 1; // El contenido ocupará el espacio restante
-                contentDiv.style.textAlign = 'left'; // Alinear el contenido a la izquierda
-                contentDiv.classList.add('pt-4', 'pl-4', 'pb-4')
-
                 const username = document.createElement('p');
-                username.textContent = `Username: ${dato.username}`;
-
+                username.innerHTML = `<strong>SAP:</strong> ${dato.username}`;
+    
                 const nombre = document.createElement('p');
-                nombre.textContent = `Nombre: ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
-
-                const fecha = document.createElement('p');
-                fecha.textContent = `Fecha: ${dato.fecha}`;
-
+                nombre.innerHTML = `<strong>Nombre:</strong> ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
+    
+                const centro = document.createElement('p');
+                centro.innerHTML = `<strong>Centro:</strong> ${dato.nombre_centro}`;
+    
+                const Hora = document.createElement('p');
+                Hora.innerHTML = `<strong>Hora:</strong> ${dato.hora_registro}`;
+    
                 // Añadir todas las etiquetas <p> al div de contenido
-                [username, nombre, fecha].forEach(elem => {
-                    contentDiv.appendChild(elem);
+                [username, nombre,centro, Hora].forEach(elem => {
+                    card.appendChild(elem);
                 });
-                card.appendChild(contentDiv);
-
+    
                 // Agregar el div de contenido y el botón a la tarjeta
                 this.RegisterAsistenceDiv.appendChild(card);
             });
@@ -258,7 +269,8 @@ class RegistroAsitencia {
             console.log('Error al obtener los puntos');
         }
     }
-
+    
+    
     handleRequestError(error) {
         console.error('Error en la petición:', error);
     }

@@ -119,6 +119,7 @@ class Modal {
                 const button = document.createElement('button');
                 button.textContent = buttonData.label;
                 button.addEventListener('click', buttonData.action);
+                button.classList.add('rounded-full', 'shadow-md', 'py-2', 'px-8');
                 modalFooter.appendChild(button);
             });
             return modalFooter;
