@@ -5,6 +5,7 @@ class RegistroAsitencia {
         this.URL = './_content/_php/controllerAdmin.php'
         this.actividadid = null;
         this.eventid = null;
+        this.usuarios = [];
     }
 
     init(actividadid, eventid) {
@@ -15,6 +16,7 @@ class RegistroAsitencia {
         this.get_allAsistence();
         this.RegisterAsistenceDiv = document.getElementById('Registroasistencia');
         this.modal = new Modal();
+        this.get_allUsers();
     }
 
 
@@ -81,15 +83,15 @@ class RegistroAsitencia {
             this.modal.open({
                 title: 'Agregar Asistencia',
                 htmlContent: `
-                        <form id="miFormulario" class="w-full max-w-lg mx-auto">
-                            <div class="my-4">
-                                <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                                <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-                            <div class="mb-4" id="info-user">
-                            </div>        
-                        </form>
-                    `,
+                    <form id="miFormulario" class="w-full max-w-lg mx-auto">
+                        <div class="my-4">
+                            <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4" id="info-user">
+                        </div>        
+                    </form>
+                `,
                 buttons: [
                     { label: 'Buscar', action: () => { this.seachUser() } },
                     { label: 'Cancelar', action: () => { this.modal.close() } }
@@ -97,12 +99,84 @@ class RegistroAsitencia {
                 modalClass: 'mi-clase-modal',
                 contentClass: 'mi-clase-contenido'
             });
+            this.seachUser() 
+            // Obtener el input de búsqueda después de abrir el modal
+            const inputBusqueda = document.getElementById('nombre');
+            // Agregar evento de escucha para actualizar la búsqueda en tiempo real
+            inputBusqueda.addEventListener('input', () => {
+                this.seachUser();
+            });
         });
+        
         this.container.appendChild(container);
     }
 
+    seachUser() {   
+        let nombre = document.getElementById('nombre').value;
+        const infoUser = document.getElementById('info-user');
+    
+        // Limpiar el contenedor de información de usuario
+        infoUser.innerHTML = '';
+    
+        // Buscar usuarios que coincidan con el nombre ingresado
+        const resultados = this.usuarios.filter(usuario => 
+            usuario.username.toLowerCase().includes(nombre.toLowerCase()) ||
+            usuario.nombre.toLowerCase().includes(nombre.toLowerCase()) ||
+            usuario.apaterno.toLowerCase().includes(nombre.toLowerCase()) ||
+            usuario.amaterno.toLowerCase().includes(nombre.toLowerCase())
+        );
+    
+        // Mostrar los resultados en el contenedor de información de usuario
+        resultados.forEach(resultado => {
+            // Crear la tarjeta para cada resultado
+            const card = document.createElement('div');
+            card.classList.add('result-card'); // Agregar una clase para estilizar la tarjeta
+    
+            // Crear elementos para mostrar los datos del usuario
+            const usernameElement = document.createElement('p');
+            usernameElement.textContent = `Username: ${resultado.username}`;
+    
+            const nombreElement = document.createElement('p');
+            nombreElement.textContent = `Nombre: ${resultado.nombre} ${resultado.apaterno} ${resultado.amaterno}`;
+    
+            // Crear el botón de agregar
+            const addButton = document.createElement('button');
+            addButton.textContent = 'Agregar';
+            addButton.classList.add('add-button'); // Agregar una clase para estilizar el botón
+            addButton.addEventListener('click', () => {
+                let data_post = {
+                    actividadid: this.actividadid,
+                    username: resultado.username,
+                    action: 'handlerAddAsistence'
+                };
+                this.httpRequestService.makeRequest({
+                    url: this.URL,
+                    data: data_post,
+                    method: 'POST',
+                    successCallback: this.handlerAddAsistence.bind(this),
+                    errorCallback: this.handleRequestError.bind(this)
+                });
+            });
+    
+            // Agregar elementos a la tarjeta
+            card.appendChild(usernameElement);
+            card.appendChild(nombreElement);
+            card.appendChild(addButton);
+    
+            // Agregar la tarjeta al contenedor de información de usuario
+            infoUser.appendChild(card);
+        });
+    }
 
-
+    handlerAddAsistence(data) {
+        if (data.success) {
+            this.modal.close();
+            this.get_allAsistence();
+        } else {
+            console.log('Error al agregar la asistencia');
+        }
+    }
+    
     get_allUsers() {
         let data_post = {
             action: 'handlerGetAllUsers'
@@ -118,8 +192,17 @@ class RegistroAsitencia {
 
     handlerGetAllUsers(data) {
         if (data.success) {
+            // Indexar los datos relevantes de los usuarios
+            this.usuarios = data.data.datos.map(usuario => ({
+                username: usuario.username,
+                nombre: usuario.nombre,
+                apaterno: usuario.apaterno,
+                amaterno: usuario.amaterno
+            }));
+            console.log(this.usuarios);
         }
     }
+
 
 
     get_allAsistence() {

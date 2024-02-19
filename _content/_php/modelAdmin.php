@@ -10,6 +10,26 @@ class ModelAdmin extends DBAbstractModel
     public $datos;
 
 
+    public function handlerGetAllUsers()
+    {
+        try {
+            $this->query = "SELECT * FROM Usuario "; // Tu consulta aquí
+            $this->getResultsFromQuery();
+            $this->datos = $this->rows;
+            if (count($this->rows) >= 1) {
+
+                $this->success = true;
+                $this->mensaje = 'Se han encontrado resultados.' . $this->query;
+            } else {
+                $this->success = false;
+                $this->mensaje = 'No se encontró ningún resultado.' . $this->query;
+            }
+        } catch (Exception $e) {
+            $this->success = false;
+            $this->mensaje = 'Error en la consulta: ' . $e->getMessage();
+        }
+    }
+
     public function handlerAddEvents($eventData)
     {
         try {
@@ -158,6 +178,22 @@ class ModelAdmin extends DBAbstractModel
             $this->mensaje = 'Error en la consulta: ' . $e->getMessage();
         }
     }
+
+    public function handlerAddAsistence($username, $actividadid)
+    {
+        try {
+            $this->query = "INSERT INTO Asistencia (username_id, actividad_id) VALUES ('$username', '$actividadid');";
+            $this->executeSingleQuery();
+            $this->success = true;
+            $this->mensaje = 'Se ha agregado la asistencia correctamente.' . $this->query;
+        } catch (Exception $e) {
+            $this->success = false;
+            $this->mensaje = 'Error en la consulta: ' . $e->getMessage() . $this->query;
+        }
+    }
+
+
+
     // Resto de los métodos abstractos de la clase padre
 
 
