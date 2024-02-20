@@ -20,9 +20,6 @@ class RegistroAsitencia {
         this.get_allUsers();
     }
 
-
-
-
     PantallaInicio() {
 
         const container = document.createElement('div');
@@ -265,10 +262,6 @@ class RegistroAsitencia {
             }));
         }
     }
-
-
-    
-
     get_allAsistence() {
         let data_post = {
             actividadid: this.actividadid,

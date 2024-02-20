@@ -26,14 +26,12 @@ class Modal {
     open(
         { title = '', text = '', imageUrl = '', buttons = [], modalClass = '', contentClass = '', htmlContent = '' } = {}) {
         this.modalContent.innerHTML = '';
-        console.log('open');
 
         if (title) {
             const modalHeader = this.createModalHeader(title);
             modalHeader.classList.add(contentClass); // Agregar clase personalizada
             this.modalContent.appendChild(modalHeader);
         }
-        console.log('open');
 
         if (text) {
             const modalBody = this.createModalBody(text);

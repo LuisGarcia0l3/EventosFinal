@@ -58,7 +58,10 @@ class Points {
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
         searchInput.className = 'flex-1 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
-
+        searchInput.id = 'searchPointUser';
+        searchInput.addEventListener('input', () => {
+            this.searchPointUser();
+        });
         const searchButton = document.createElement('button');
         searchButton.className = 'bg-gray-300 rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
 
@@ -70,7 +73,10 @@ class Points {
 
         const pointsDiv = document.createElement('div');
         pointsDiv.id = 'RegistroPuntos';
-        pointsDiv.className = 'mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        pointsDiv.className = ' overflow-y-auto grid grid-cols-1 gap-2'; // Agrega la clase overflow-y-auto para habilitar el desplazamiento vertical
+        pointsDiv.style.maxHeight = 'calc(100vh - 250px)'; // Establece una altura máxima en lugar de una altura fija
+        pointsDiv.style.overflowY = 'auto'; // Añade desplazamiento vertical cuando sea necesario
+
         container.appendChild(pointsDiv);
 
         const addButton = document.createElement('button');
@@ -80,7 +86,8 @@ class Points {
         container.appendChild(addButton);
         addButton.addEventListener('click', () => {
             this.modal.open({
-                title: 'Agregar Asistencia',
+                title: 'Agregar Punto',
+                text: 'Al agregar desde aqui, estas agregando tambien la asistencia',
                 htmlContent: `
                     <form id="miFormulario" class="w-full max-w-lg mx-auto">
                         <div class="my-4">
@@ -149,61 +156,161 @@ class Points {
         );
 
         // Mostrar los resultados en el contenedor de información de usuario
-        resultados.forEach(resultado => {
-            // Crear la tarjeta para cada resultado
+        resultados.forEach(dato => {
             const card = document.createElement('div');
-            card.classList.add('result-card', 'flex', 'justify-between', 'rounded-md', 'shadow-md', 'p-2', 'items-center'); // Utilizar clases de Tailwind CSS para estilos
+            card.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'relative', 'flex'); // Agregar 'flex' para usar flexbox
 
-            // Crear elementos para mostrar los datos del usuario
-            const userData = document.createElement('div'); // Contenedor para datos de usuario
-            userData.classList.add('flex', 'flex-col'); // Clases flex y flex-col para alinear elementos verticalmente
+            const contentDiv = document.createElement('div'); // Div para el contenido de las etiquetas <p>
 
-            const usernameElement = document.createElement('p');
-            usernameElement.textContent = `SAP: ${resultado.username}`;
-            usernameElement.classList.add('text-m', 'font-bold'); // Clases de Tailwind para estilos de texto
+            const username = document.createElement('p');
+            username.innerHTML = `<b>Username:</b> ${dato.username}`;
 
-            const nombreElement = document.createElement('p');
-            nombreElement.textContent = `Nombre: ${resultado.nombre} ${resultado.apaterno} ${resultado.amaterno}`;
-            nombreElement.classList.add('text-sm'); // Clase de Tailwind para estilos de texto más pequeños
+            const nombre = document.createElement('p');
+            nombre.innerHTML = `<b>Nombre:</b> ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
 
-            const centroElement = document.createElement('p');
-            centroElement.textContent = `Centro: ${resultado.NombreCentro}`;
-            centroElement.classList.add('text-sm', 'text-gray-500'); // Clases de Tailwind para estilos de texto más pequeños y color gris
+            const totalPuntos = document.createElement('p');
+            totalPuntos.innerHTML = `<b>Punto asignado:</b> ${dato.total_puntos}`;
 
-            // Agregar elementos de usuario al contenedor userData
-            userData.appendChild(nombreElement);
-            userData.appendChild(usernameElement);
-            userData.appendChild(centroElement);
+            const descripcion = document.createElement('p');
+            descripcion.innerHTML = `<b>Descripción:</b> ${dato.descripcion}`;
 
-            // Crear el botón de agregar
-            const addButton = document.createElement('button');
-            addButton.textContent = 'Registrar';
-            addButton.classList.add('add-button', 'text-sm', 'p-2', 'bg-blue-500', 'text-white', 'rounded-md', 'shadow-sm'); // Clases de Tailwind para estilos de botón
-
-            // Agregar evento de clic al botón de agregar
-            addButton.addEventListener('click', () => {
-                let data_post = {
-                    actividadid: this.actividadid,
-                    username: resultado.username,
-                    action: 'handlerAddAsistence'
-                };
-                this.httpRequestService.makeRequest({
-                    url: this.URL,
-                    data: data_post,
-                    method: 'POST',
-                    successCallback: this.handlerAddAsistence.bind(this),
-                    errorCallback: this.handleRequestError.bind(this)
-                });
+            [username, nombre, totalPuntos, descripcion].forEach(elem => {
+                contentDiv.appendChild(elem);
             });
+            card.appendChild(contentDiv);
+                // Crear el contenedor principal
+                const container = document.createElement('div');
+                container.classList.add('rounded-md', 'flex', 'flex-col', 'items-center'); // Agregar 'flex' para usar flexbox
+                container.style.width = '50%'; // Establecer el ancho al 100%
+                // Crear el contenedor del título
+                const titleContainer = document.createElement('div');
+                titleContainer.classList.add('mb-2'); // Agregar margen inferior
+                // Crear el título
+                const title = document.createElement('h3');
+                title.textContent = 'Registrar Puntos';
+                title.classList.add('text-md', 'font-bold', 'text-center');
+                // Agregar el título al contenedor del título
+                titleContainer.appendChild(title);
+                // Agregar el contenedor del título al contenedor principal
+                container.appendChild(titleContainer);
 
-            // Agregar elementos a la tarjeta
-            card.appendChild(userData); // Agregar contenedor de datos de usuario
-            card.appendChild(addButton); // Agregar botón de agregar
+                // Crear el primer contenedor horizontal
+                const firstContainer = document.createElement('div');
+                firstContainer.classList.add('flex', 'items-center', 'mb-2'); // Agregar margen inferior
 
-            // Agregar la tarjeta al contenedor de información de usuario
+                // Crear el botón para el primer contenedor
+                const button1 = document.createElement('button');
+                button1.textContent = '1';
+                button1.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
+
+                firstContainer.appendChild(button1);
+
+                container.appendChild(firstContainer);
+
+                const secondContainer = document.createElement('div');
+                secondContainer.classList.add('flex', 'items-center');
+
+
+                const button2 = document.createElement('button');
+                button2.textContent = '2';
+                button2.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
+
+                secondContainer.appendChild(button2);
+
+                container.appendChild(secondContainer);
+                card.appendChild(container);
             infoUser.appendChild(card);
-
         });
+    }
+
+    searchPointUser() {
+        let searchPointUser = document.getElementById('searchPointUser').value;
+        this.pointsDiv.innerHTML = '';
+        const resultados = this.poinstUsers.filter(usuario =>
+            usuario.username.toLowerCase().includes(searchPointUser.toLowerCase()) ||
+            usuario.nombre.toLowerCase().includes(searchPointUser.toLowerCase()) ||
+            usuario.apaterno.toLowerCase().includes(searchPointUser.toLowerCase()) ||
+            usuario.amaterno.toLowerCase().includes(searchPointUser.toLowerCase()) ||
+            usuario.total_puntos.toLowerCase().includes(searchPointUser.toLowerCase())
+
+        )
+        resultados.forEach(dato => {
+            const card = document.createElement('div');
+            card.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'relative', 'flex'); // Agregar 'flex' para usar flexbox
+
+            const contentDiv = document.createElement('div'); // Div para el contenido de las etiquetas <p>
+
+            const username = document.createElement('p');
+            username.innerHTML = `<b>Username:</b> ${dato.username}`;
+
+            const nombre = document.createElement('p');
+            nombre.innerHTML = `<b>Nombre:</b> ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
+
+            const totalPuntos = document.createElement('p');
+            totalPuntos.innerHTML = `<b>Punto asignado:</b> ${dato.total_puntos}`;
+
+            const descripcion = document.createElement('p');
+            descripcion.innerHTML = `<b>Descripción:</b> ${dato.descripcion}`;
+
+            [username, nombre, totalPuntos, descripcion].forEach(elem => {
+                contentDiv.appendChild(elem);
+            });
+            card.appendChild(contentDiv);
+            if (dato.total_puntos == 0) {
+                // Crear el contenedor principal
+                const container = document.createElement('div');
+                container.classList.add('rounded-md', 'flex', 'flex-col', 'items-center'); // Agregar 'flex' para usar flexbox
+                container.style.width = '50%'; // Establecer el ancho al 100%
+                // Crear el contenedor del título
+                const titleContainer = document.createElement('div');
+                titleContainer.classList.add('mb-2'); // Agregar margen inferior
+                // Crear el título
+                const title = document.createElement('h3');
+                title.textContent = 'Registrar Puntos';
+                title.classList.add('text-md', 'font-bold', 'text-center');
+                // Agregar el título al contenedor del título
+                titleContainer.appendChild(title);
+                // Agregar el contenedor del título al contenedor principal
+                container.appendChild(titleContainer);
+
+                // Crear el primer contenedor horizontal
+                const firstContainer = document.createElement('div');
+                firstContainer.classList.add('flex', 'items-center', 'mb-2'); // Agregar margen inferior
+
+                // Crear el texto para el primer contenedor
+                const text1 = document.createElement('p');
+                text1.textContent = 'Punto por';
+
+                // Crear el botón para el primer contenedor
+                const button1 = document.createElement('button');
+                button1.textContent = '1';
+                button1.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
+
+                firstContainer.appendChild(text1);
+                firstContainer.appendChild(button1);
+
+                container.appendChild(firstContainer);
+
+                const secondContainer = document.createElement('div');
+                secondContainer.classList.add('flex', 'items-center');
+
+                const text2 = document.createElement('p');
+                text2.textContent = 'Punto por';
+
+                const button2 = document.createElement('button');
+                button2.textContent = '2';
+                button2.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
+
+                secondContainer.appendChild(text2);
+                secondContainer.appendChild(button2);
+
+                container.appendChild(secondContainer);
+                card.appendChild(container);
+            }
+
+            this.pointsDiv.appendChild(card);
+        });
+
     }
 
     get_allpoints() {
@@ -216,36 +323,41 @@ class Points {
             data: data_post,
             method: 'POST', // Cambiar a método POST        
             successCallback: this.handlerGetAllPoints.bind(this),
-            errorCallback: this.handleRequestError
+            errorCallback: this.handleRequestError.bind(this)
         });
     }
 
     handlerGetAllPoints(data) {
         if (data.success) {
+            this.poinstUsers = data.data.datos.map(usuario => ({
+                username: usuario.username,
+                nombre: usuario.nombre,
+                apaterno: usuario.apaterno,
+                amaterno: usuario.amaterno,
+                total_puntos:usuario.total_puntos,
+                
+            }));
             const datos = data.data.datos;
-            const pointsDiv = document.getElementById('RegistroPuntos');
-
-            // Limpiar el contenido actual del contenedor
-            pointsDiv.innerHTML = '';
-
+            this.pointsDiv.innerHTML = '';
+            console.log(datos)
             datos.forEach(dato => {
                 const card = document.createElement('div');
                 card.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'relative', 'flex'); // Agregar 'flex' para usar flexbox
-            
+
                 const contentDiv = document.createElement('div'); // Div para el contenido de las etiquetas <p>
-            
+
                 const username = document.createElement('p');
                 username.innerHTML = `<b>Username:</b> ${dato.username}`;
-            
+
                 const nombre = document.createElement('p');
                 nombre.innerHTML = `<b>Nombre:</b> ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
-            
+
                 const totalPuntos = document.createElement('p');
                 totalPuntos.innerHTML = `<b>Punto asignado:</b> ${dato.total_puntos}`;
-            
+
                 const descripcion = document.createElement('p');
                 descripcion.innerHTML = `<b>Descripción:</b> ${dato.descripcion}`;
-            
+
                 [username, nombre, totalPuntos, descripcion].forEach(elem => {
                     contentDiv.appendChild(elem);
                 });
@@ -266,74 +378,49 @@ class Points {
                     titleContainer.appendChild(title);
                     // Agregar el contenedor del título al contenedor principal
                     container.appendChild(titleContainer);
-            
+
                     // Crear el primer contenedor horizontal
                     const firstContainer = document.createElement('div');
                     firstContainer.classList.add('flex', 'items-center', 'mb-2'); // Agregar margen inferior
-            
+
                     // Crear el texto para el primer contenedor
                     const text1 = document.createElement('p');
                     text1.textContent = 'Punto por';
-            
+
                     // Crear el botón para el primer contenedor
                     const button1 = document.createElement('button');
                     button1.textContent = '1';
                     button1.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
-            
-                    // Agregar el texto y el botón al primer contenedor
+
                     firstContainer.appendChild(text1);
                     firstContainer.appendChild(button1);
-            
-                    // Agregar el primer contenedor al contenedor principal
+
                     container.appendChild(firstContainer);
-            
-                    // Crear el segundo contenedor horizontal
+
                     const secondContainer = document.createElement('div');
-                    secondContainer.classList.add('flex', 'items-center'); // No se necesita margen inferior
-            
-                    // Crear el texto para el segundo contenedor
+                    secondContainer.classList.add('flex', 'items-center');
+
                     const text2 = document.createElement('p');
                     text2.textContent = 'Punto por';
-            
-                    // Crear el botón para el segundo contenedor
+
                     const button2 = document.createElement('button');
                     button2.textContent = '2';
                     button2.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2', 'rounded-full');
-            
-                    // Agregar el texto y el botón al segundo contenedor
+
                     secondContainer.appendChild(text2);
                     secondContainer.appendChild(button2);
-            
-                    // Agregar el segundo contenedor al contenedor principal
+
                     container.appendChild(secondContainer);
-            
-                    // Agregar el contenedor principal a la tarjeta
                     card.appendChild(container);
                 }
-            
-                // Agregar el div de contenido y el botón a la tarjeta
-                pointsDiv.appendChild(card);
+
+                this.pointsDiv.appendChild(card);
             });
-            
+
             
         } else {
             console.log('Error al obtener los puntos');
         }
-    }
-
-
-    add_points() {
-        let data_post = {
-            actividadid: this.actividadid,
-            action: 'handlerAddPoints'
-        };
-        this.httpRequestService.makeRequest({
-            url: this.URL,
-            data: data_post,
-            method: 'POST',
-            successCallback: this.handlerAddPoints.bind(this),
-            errorCallback: this.handleRequestError
-        });
     }
 
 
@@ -345,7 +432,6 @@ class Points {
         }
     }
 
-    
 
     get_dataPoints() {
         let data_post = {
@@ -361,10 +447,9 @@ class Points {
         });
     }
 
-
     handlerGetDataPoints(data) {
         if (data.success) {
-            console.log(data)
+            console.log(data.data.datos)
         } else {
             console.log('Error al registrar los puntos');
         }
