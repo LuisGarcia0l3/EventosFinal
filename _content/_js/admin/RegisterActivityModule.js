@@ -35,7 +35,7 @@ class RegistroAsitencia {
     
         const backButton = document.createElement('button');
         backButton.textContent = '←'; // Cambiar a flecha hacia la izquierda
-        backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md';
+        backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md bg-white';
         backButton.style.width = '15%'; // Establecer el ancho al 20%
         backButton.addEventListener('click', () => {
             this.container.innerHTML = '';

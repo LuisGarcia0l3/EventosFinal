@@ -48,6 +48,8 @@ class ControllerAdmin
             case 'handlerAddAsistence':
                 $this->handlerAddAsistence($data_post);
                 break;
+            case 'handlerGetDataPoints':
+                $this->handlerGetDataPoints($data_post);
                 
         }
     }
@@ -130,6 +132,15 @@ class ControllerAdmin
         
         echo json_encode($data);
     }
+
+    private function handlerGetDataPoints($data_post)
+    {
+        $actividadid = isset($data_post['actividadid']) ? $data_post['actividadid'] : '';
+        $this->model->handlerGetDataPoints($actividadid);
+        $data = $this->createResponseData();
+        
+        echo json_encode($data);
+    } 
 /**************************************** Respuesta ****************************************/
 
      // Crea y devuelve los datos de respuesta comunes a todas las funciones
