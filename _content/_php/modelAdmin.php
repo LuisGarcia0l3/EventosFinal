@@ -194,7 +194,28 @@ class ModelAdmin extends DBAbstractModel
         }
     }
 
+    public function handlerGetDataPoints( $actividadid)
+    {
+        try {
+            $this->query = "SELECT a.id AS id_actividad, a.Nombre AS nombre_actividad, p.descripcion, p.Puntos
+            FROM Actividad a
+            JOIN Punto p ON a.id = p.actividad_id
+            WHERE a.id = '$actividadid'";
+            $this->getResultsFromQuery();
+            $this->datos = $this->rows;
+            if (count($this->rows) >= 1) {
 
+                $this->success = true;
+                $this->mensaje = 'Se han encontrado resultados.' . $this->query;
+            } else {
+                $this->success = false;
+                $this->mensaje = 'No se encontró ningún resultado.' . $this->query;
+            }
+        } catch (Exception $e) {
+            $this->success = false;
+            $this->mensaje = 'Error en la consulta: ' . $e->getMessage();
+        }
+    }
 
     // Resto de los métodos abstractos de la clase padre
 

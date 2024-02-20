@@ -26,7 +26,7 @@ class Activities {
         
         const backButton = document.createElement('button');
         backButton.textContent = '←'; // Cambiar a flecha hacia la izquierda
-        backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md';
+        backButton.className = 'text-black font-bold py-2 px-4 rounded-full shadow-md bg-white';
         backButton.style.width = '15%'; // Establecer el ancho al 20%
         backButton.addEventListener('click', () => {
             this.eventos = new EventsModule();
@@ -50,10 +50,10 @@ class Activities {
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
-        searchInput.className = 'flex-1 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
+        searchInput.className = 'flex-1 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
 
         const searchButton = document.createElement('button');
-        searchButton.className = 'bg-gray-300 rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
+        searchButton.className = ' rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
 
 
         searchDiv.appendChild(searchInput);
@@ -248,7 +248,7 @@ actividadesDiv.style.overflowY = 'auto'; // Añade desplazamiento vertical cuand
                 // Botón 1
                 const boton1 = document.createElement('button');
                 boton1.textContent = 'Registrar Asistencia';
-                boton1.className = 'boton bg-white hover:bg-gray-200 focus:bg-gray-300 focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm bg-gray-100';
+                boton1.className = 'boton bg-white hover:bg-gray-200 focus: focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm';
                 boton1.style.width = '50%'; // Cada botón ocupa el 50% del ancho
                 botonesDiv.appendChild(boton1);
                 boton1.addEventListener('click', () => {
@@ -260,7 +260,7 @@ actividadesDiv.style.overflowY = 'auto'; // Añade desplazamiento vertical cuand
                 // Botón 2
                 const boton2 = document.createElement('button');
                 boton2.textContent = 'Registrar Puntos';
-                boton2.className = 'boton bg-white hover:bg-gray-200 focus:bg-gray-300 focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm bg-gray-100';
+                boton2.className = 'boton bg-white hover:bg-gray-200 focus: focus:outline-none p-2 rounded-md rounded-lg shadow-md	mx-2 text-sm';
                 boton2.style.width = '50%'; // Cada botón ocupa el 50% del ancho
                 botonesDiv.appendChild(boton2);
                 boton2.addEventListener('click', () => {

@@ -21,7 +21,7 @@ class EventsModule {
 
         const title = document.createElement('h2');
         title.textContent = 'Eventos';
-        title.className = 'text-2xl font-bold';
+        title.className = 'text-2xl font-bold ';
 
         const searchDiv = document.createElement('div');
         searchDiv.className = 'flex items-center my-6';
