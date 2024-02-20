@@ -50,11 +50,15 @@ class Activities {
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
-        searchInput.className = 'flex-1 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
+        searchInput.className = 'flex-1 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
 
         const searchButton = document.createElement('button');
-        searchButton.className = ' rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
+        searchButton.className = 'bg-gray-300 rounded-r-lg py-2 px-4 focus:outline-none flex items-center'; // Añadir la clase 'flex items-center' para alinear verticalmente el contenido
+        const closeIcon = document.createTextNode('x'); // Crear un nodo de texto con la "x"
+        searchButton.appendChild(closeIcon); // Agregar el nodo de texto al botón
 
+        // Agregar clases para que la altura del botón coincida con la del input
+        searchButton.classList.add('h-full');
 
         searchDiv.appendChild(searchInput);
         searchDiv.appendChild(searchButton); // Agrega el botón de búsqueda al contenedor de búsqueda

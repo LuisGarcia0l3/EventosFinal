@@ -87,7 +87,7 @@ class Points {
         addButton.addEventListener('click', () => {
             this.modal.open({
                 title: 'Agregar Punto',
-                text: 'Al agregar desde aqui, estas agregando tambien la asistencia',
+                text: 'Texto para este punto',
                 htmlContent: `
                     <form id="miFormulario" class="w-full max-w-lg mx-auto">
                         <div class="my-4">
