@@ -6,6 +6,7 @@ class RegistroAsitencia {
         this.actividadid = null;
         this.eventid = null;
         this.usuarios = [];
+        this.assitans = [];
     }
 
     init(actividadid, eventid) {
@@ -58,11 +59,19 @@ class RegistroAsitencia {
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar';
+        searchInput.id = 'searchAssistans';
         searchInput.className = 'flex-1 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500';
-    
+        searchInput.addEventListener('input', () => {
+            this.searchAssitant();
+        });
         const searchButton = document.createElement('button');
         searchButton.className = 'bg-gray-300 rounded-r-lg py-2 px-4 focus:outline-none h-full'; // Agrega la clase h-full para que tenga la misma altura que el input
-    
+       
+        searchButton.addEventListener('click', ()=> {
+            this.searchAssitant();
+        }
+
+        )
         searchDiv.appendChild(searchInput);
         searchDiv.appendChild(searchButton); // Agrega el botón de búsqueda al contenedor de búsqueda
     
@@ -71,7 +80,9 @@ class RegistroAsitencia {
         const RegisterActivityDiv = document.createElement('div');
         RegisterActivityDiv.id = 'Registroasistencia';
         RegisterActivityDiv.className = ' overflow-y-auto grid grid-cols-1 gap-2'; // Agrega la clase overflow-y-auto para habilitar el desplazamiento vertical
-        RegisterActivityDiv.style.height = 'calc(100vh - 250px)'; // Ajusta la altura del contenedor fijo, dejando espacio para otros elementos
+        RegisterActivityDiv.style.maxHeight = 'calc(100vh - 250px)'; // Establece una altura máxima en lugar de una altura fija
+        RegisterActivityDiv.style.overflowY = 'auto'; // Añade desplazamiento vertical cuando sea necesario
+        
         container.appendChild(RegisterActivityDiv);
     
         const addButton = document.createElement('button');
@@ -110,6 +121,42 @@ class RegistroAsitencia {
         this.container.appendChild(container);
     }
     
+    searchAssitant(){
+        let searchAssistans = document.getElementById('searchAssistans').value;
+        this.RegisterAsistenceDiv.innerHTML = '';
+        const resultados = this.assitans.filter (asistente =>
+            asistente.username.toLowerCase().includes(searchAssistans.toLowerCase()) ||
+            asistente.nombre.toLowerCase().includes(searchAssistans.toLowerCase()) ||
+            asistente.apaterno.toLowerCase().includes(searchAssistans.toLowerCase()) ||
+            asistente.amaterno.toLowerCase().includes(searchAssistans.toLowerCase())
+        )
+
+        resultados.forEach(dato => {
+            const card = document.createElement('div');
+            card.classList.add('shadow-md', 'p-4','rounded-md', 'flex', 'flex-col'); // Agregar 'flex' para usar flexbox y 'flex-col' para disposición vertical
+            card.style.backgroundColor = 'white'; // Establecer el fondo blanco
+            const username = document.createElement('p');
+            username.innerHTML = `<strong>SAP:</strong> ${dato.username}`;
+
+            const nombre = document.createElement('p');
+            nombre.innerHTML = `<strong>Nombre:</strong> ${dato.nombre} ${dato.apaterno} ${dato.amaterno}`;
+
+            const centro = document.createElement('p');
+            centro.innerHTML = `<strong>Centro:</strong> ${dato.nombre_centro}`;
+
+            const Hora = document.createElement('p');
+            Hora.innerHTML = `<strong>Hora:</strong> ${dato.hora_registro}`;
+
+            // Añadir todas las etiquetas <p> al div de contenido
+            [username, nombre,centro, Hora].forEach(elem => {
+                card.appendChild(elem);
+            });
+
+            // Agregar el div de contenido y el botón a la tarjeta
+            this.RegisterAsistenceDiv.appendChild(card);
+        });
+
+    }
     
 
     seachUser() {
@@ -238,7 +285,12 @@ class RegistroAsitencia {
 
     handlerGetAllAsistence(data) {
         if (data.success) {
-            
+            this.assitans = data.data.datos.map(usuario => ({
+                username: usuario.username,
+                nombre: usuario.nombre,
+                apaterno: usuario.apaterno,
+                amaterno: usuario.amaterno,
+            }));
             const datos = data.data.datos;
             this.RegisterAsistenceDiv.innerHTML = '';
             datos.forEach(dato => {
