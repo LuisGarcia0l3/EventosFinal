@@ -113,7 +113,8 @@ class ModelAdmin extends DBAbstractModel
             U.nombre,
             U.apaterno,
             U.amaterno,
-            COALESCE(SUM(CASE WHEN P.actividad_id = '$actividadid' THEN P.Puntos ELSE 0 END), 0) AS total_puntos
+            COALESCE(SUM(CASE WHEN P.actividad_id = '$actividadid' THEN P.Puntos ELSE 0 END), 0) AS total_puntos,
+            P.descripcion
         FROM 
             Usuario U
         LEFT JOIN 
@@ -125,7 +126,7 @@ class ModelAdmin extends DBAbstractModel
         WHERE 
             A.actividad_id = '$actividadid' 
         GROUP BY 
-            U.username, U.nombre, U.apaterno, U.amaterno LIMIT 100       ";
+            U.username, U.nombre, U.apaterno, U.amaterno,P.descripcion        ";
 
             $this->getResultsFromQuery();
             $this->datos = $this->rows;
